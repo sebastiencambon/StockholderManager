@@ -1,0 +1,26 @@
+@using Microsoft.AspNetCore.Identity
+@using StockholderManager.Data
+@inject SignInManager<Stockholder> SignInManager
+@inject UserManager<Stockholder> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+  <form asp-controller="Account" asp-action="Logout" method="post" id="logoutForm" class="navbar-right">
+    <ul class="nav navbar-nav navbar-right">
+      <li>
+        <a asp-page="/Account/Manage/Index" title="Mon compte">
+          <i class="material-icons">person</i><span>@((await UserManager.GetUserAsync(User)).FullName)</span>
+        </a>
+      </li>
+      <li>
+        <button title="Se déconnecter" type="submit" class="btn btn-link navbar-btn navbar-link"><i class="material-icons text-danger">highlight_off</i></button>
+      </li>
+    </ul>
+  </form>
+}
+else
+{
+  <ul class="nav navbar-nav navbar-right">
+    <li><a asp-page="/Account/Login">Se connecter</a></li>
+  </ul>
+}

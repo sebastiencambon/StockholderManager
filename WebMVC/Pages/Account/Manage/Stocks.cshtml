@@ -1,0 +1,42 @@
+﻿@page
+@model StockholderManager.Pages.Account.Manage.StocksModel
+@{
+  ViewData["Title"] = "Stocks";
+  Layout = "~/Pages/Account/Manage/_Layout.cshtml";
+}
+
+
+<h2>Mes actions</h2>
+<form method="post">
+  <table class="table-bordered table">
+    <thead>
+      <tr>
+        <td>Prix</td>
+        <td>Achetée le</td>
+        <td>Action</td>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach (var stock in Model.Stocks)
+      {
+        <tr>
+          <td>@stock.Price</td>
+          <td>
+            @(stock.SaleDate.HasValue ? stock.SaleDate.Value.ToString("dd/MM/yyyy") : "N/A")
+          </td>
+          <td>
+            @if (!stock.Saleable)
+            {
+              <button class="btn" type="submit" asp-page-handler="Sale" asp-route-id="@stock.Id">Mettre en vente</button>
+            }
+            else
+            {
+              <div>Action en vente</div>
+            }
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+</form>

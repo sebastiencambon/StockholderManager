@@ -1,0 +1,17 @@
+@using Microsoft.AspNetCore.Identity
+@using StockholderManager.Data
+@using Microsoft.EntityFrameworkCore
+@inject SignInManager<Stockholder> SignInManager
+@inject UserManager<Stockholder> UserManager
+@inject ApplicationDbContext Context
+
+@if (User.IsInRole("gerant"))
+{
+  <li>
+    <a asp-page="/Admin/ValidateSales">
+      Ventes à valider <span class="badge badge-light">@Context.Stocks.Include(f => f.Buyer).Count(f => f.Buyer != null)</span>
+      <span class="sr-only">unread messages</span>
+    </a>
+  </li>
+  <li><a asp-page="/Societaire/Index">Sociétaires</a></li>
+}

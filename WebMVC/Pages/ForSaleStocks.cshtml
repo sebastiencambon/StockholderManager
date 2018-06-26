@@ -1,0 +1,34 @@
+﻿@page
+@model StockholderManager.Pages.ForSaleStocksModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+  ViewData["Title"] = "ForSaleStocks";
+  Layout = "~/Pages/_Layout.cshtml";
+}
+
+<h2>Actions en vente</h2>
+<form method="post">
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <td>Actionnaire</td>
+        <td>Prix</td>
+        <td>Action</td>
+      </tr>
+    </thead>
+    <tbody>
+
+      @foreach (var stock in Model.ForSaleStocks)
+      {
+        <tr>
+          <td>@(stock.Holder != null ? stock.Holder.FullName : "N/A")</td>
+          <td>@stock.Price</td>
+          <td>
+            <button class="btn btn-primary" type="submit" asp-page-handler="Buy" asp-route-id="@stock.Id">Acheter</button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</form>
+

@@ -1,0 +1,96 @@
+﻿@page
+@model StockholderManager.Pages.Admin.ValidateSalesModel
+@{
+  ViewData["Title"] = "ValidateSales";
+  Layout = "~/Pages/_Layout.cshtml";
+}
+
+
+<h2>Ventes à valider</h2>
+<div class="btn-toolbar" id="actionToolbar" role="toolbar">
+  <div class="pull-left">
+    <i class="material-icons rotate90">subdirectory_arrow_right</i>
+  </div>
+  <div class="btn-group" role="group" aria-label="...">
+    <button class="btn btn-primary" type="submit" id="validateSelectionBtn" asp-page-handler="ValidateSelectedSales">Valider la vente</button>
+  </div>
+</div>
+<form method="post">
+  <table class="table table-bordered" id="validateList">
+    <thead>
+      <tr>
+        <td><input class="checkbox" type="checkbox" id="selectAll" /></td>
+        <td>Actionnaire</td>
+        <td>Prix</td>
+        <td>Acheteur</td>
+        <td>Action</td>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach (var stock in Model.StockSaleToProceed)
+      {
+        <tr>
+          <td>
+            <input type="checkbox" class="checkbox" />
+            <input type="hidden" value="@stock.Id" />
+          </td>
+          <td>@(stock.Holder != null ? stock.Holder.FullName : "N/A")</td>
+          <td>@stock.Price</td>
+          <td>
+            @stock.Buyer.FullName
+          </td>
+          <td>
+            <button class="btn btn-primary" type="submit" asp-page-handler="ValidateSale" asp-route-id="@stock.Id">Valider la vente</button>
+            <button class="btn btn-danger" type="submit" asp-page-handler="CancelSale" asp-route-id="@stock.Id">Annuler la vente</button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</form>
+
+<form method="post">
+  <input type="hidden" name="Selection" id="toto" />
+  <input type="submit" asp-page-handler="ValidateSelectedSales" />
+</form>
+
+@section Scripts
+  {
+  <script>
+
+    updateMultiActionVisibility();
+    $("#selectAll").click(function (e) {
+      $("#validateList > tbody .checkbox").prop('checked', $("#selectAll").prop('checked'));
+
+      updateMultiActionVisibility();
+    });
+    $("#validateList > tbody .checkbox").click(function (e) {
+      $("#selectAll").prop('checked', false);
+      updateMultiActionVisibility();
+    });
+
+    function updateMultiActionVisibility() {
+      if ($("#validateList > tbody .checkbox:checked").length > 1) {
+        $("#actionToolbar").show();
+      }
+      else {
+        $("#actionToolbar").hide();
+      }
+    }
+
+    $("#validateSelectionBtn").click(function (e) {
+      let selectedIds = [];
+      $("#validateList > tbody .checkbox:checked").each(function (i, el) {
+        selectedIds.push($(el).next("input").val());
+      });
+
+      $("#toto").val(JSON.stringify(selectedIds));
+
+      if (selectedIds.length > 0) {
+        $.post(location.href + "?handler=ValidateSelectedSales", JSON.stringify(selectedIds), () => {
+          debugger;
+        });
+      }
+    });
+  </script>
+}

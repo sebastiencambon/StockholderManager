@@ -1,0 +1,69 @@
+﻿@page
+@model StockholderManager.Pages.Societaire.IndexModel
+@{
+  ViewData["Title"] = "Index";
+  Layout = "~/Pages/_Layout.cshtml";
+}
+
+<h2>Sociétaires</h2>
+<a asp-page="Create">Ajouter</a> / <a asp-page="Create">Importer</a>
+<div style="display:flex; flex-direction: row;">
+  <div style="flex:2; padding:10px">
+    <h2>Sociétaires</h2>
+    <table class="table table-bordered" id="societaires">
+      <thead>
+        <tr>
+          <td>Nom</td>
+          <td>Email</td>
+          <td>Email confirmé</td>
+        </tr>
+      </thead>
+      <tbody>
+        @foreach (var user in Model.Societaires)
+        {
+          <tr class="@(Model.SelectedSocietaire  == user.Id ? "active" : string.Empty)">
+            <input class="userId" type="hidden" value="@user.Id" />
+            <td>@user.FullName</td>
+            <td>@user.Email</td>
+            <td>@user.EmailConfirmed</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+  </div>
+  <div style="flex:2; padding:10px">
+    <h2>Actions</h2>
+    <table class="table table-bordered" id="actions">
+      <thead>
+        <tr>
+          <td>En vente</td>
+          <td>Price</td>
+        </tr>
+      </thead>
+      <tbody>
+        @foreach (var stock in Model.Stocks)
+        {
+          <tr>
+            <td>@stock.Saleable</td>
+            <td>@stock.Price</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+  </div>
+
+</div>
+
+@section Scripts
+  {
+  <script>
+    $("#societaires>tbody>tr").click(function () {
+      debugger;
+      let url = "@Url.Page("Index")" + "?id=" + $(this).find(".userId").val();
+      window.document.location = url;
+  });
+  </script>
+
+}
